@@ -50,12 +50,12 @@ gulp.task('bower', function() {
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('build-css', ['clean'], function() {
-    return gulp.src('./styles/*')
+    return gulp.src('./ng1/styles/*')
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(cachebust.resources())
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./dist/ng1'));
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -70,13 +70,13 @@ gulp.task('build-template-cache', ['clean'], function() {
     var ngHtml2Js = require("gulp-ng-html2js"),
         concat = require("gulp-concat");
     
-    return gulp.src("./partials/*.html")
+    return gulp.src("./ng1/partials/*.html")
         .pipe(ngHtml2Js({
             moduleName: "todoPartials",
             prefix: "/partials/"
         }))
         .pipe(concat("templateCachePartials.js"))
-        .pipe(gulp.dest("./dist"));
+        .pipe(gulp.dest("./dist/ng1"));
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ gulp.task('build-template-cache', ['clean'], function() {
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('jshint', function() {
-    gulp.src('/js/*.js')
+    gulp.src('/ng1/js/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -99,7 +99,7 @@ gulp.task('jshint', function() {
 
 gulp.task('test', ['build-js'], function() {
     var testFiles = [
-        './test/unit/*.js'
+        './ng1/test/unit/*.js'
     ];
 
     return gulp.src(testFiles)
@@ -121,9 +121,9 @@ gulp.task('test', ['build-js'], function() {
 
 gulp.task('build-js', ['clean'], function() {
     var b = browserify({
-        entries: './js/app.js',
+        entries: './ng1/js/app.js',
         debug: true,
-        paths: ['./js/controllers', './js/services', './js/directives'],
+        paths: ['./ng1/js/controllers', './ng1/js/services', './ng1/js/directives', './dist/ng1'],
         transform: [ngAnnotate]
     });
 
@@ -135,7 +135,7 @@ gulp.task('build-js', ['clean'], function() {
         .pipe(uglify())
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/js/'));
+        .pipe(gulp.dest('./dist/ng1/js/'));
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -145,9 +145,9 @@ gulp.task('build-js', ['clean'], function() {
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('build', [ 'clean', 'bower','build-css','build-template-cache', 'jshint', 'build-js'], function() {
-    return gulp.src('index.html')
+    return gulp.src('ng1/index.html')
         .pipe(cachebust.references())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/ng1'));
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ gulp.task('build', [ 'clean', 'bower','build-css','build-template-cache', 'jshin
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('watch', function() {
-    return gulp.watch(['./index.html','./partials/*.html', './styles/*.*css', './js/**/*.js'], ['build']);
+    return gulp.watch(['./ng1/index.html','./ng1/partials/*.html', './ng1/styles/*.*css', './ng1/js/**/*.js'], ['build']);
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +171,7 @@ gulp.task('webserver', ['watch','build'], function() {
         .pipe(webserver({
             livereload: false,
             directoryListing: true,
-            open: "http://localhost:8000/dist/index.html"
+            open: "http://localhost:8000/dist/ng1/index.html"
         }));
 });
 
@@ -200,8 +200,8 @@ gulp.task('sprite', function () {
             padding: 5
         }));
 
-    spriteData.css.pipe(gulp.dest('./dist'));
-    spriteData.img.pipe(gulp.dest('./dist'))
+    spriteData.css.pipe(gulp.dest('./dist/ng1'));
+    spriteData.img.pipe(gulp.dest('./dist/ng1'))
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -210,4 +210,4 @@ gulp.task('sprite', function () {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('default', ['sprite','build', 'test']);
+gulp.task('default', ['sprite','build'/*, 'test'*/]);

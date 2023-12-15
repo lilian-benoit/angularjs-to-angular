@@ -8,7 +8,7 @@
 
 angular = require('angular');
 require('angular-route');
-require('../dist/templateCachePartials');
+require('../../dist/ng1/templateCachePartials');
 
 angular.module('todomvc', ['ngRoute','todoPartials'])
 	.config(function ($routeProvider) {
